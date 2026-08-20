@@ -1,0 +1,29 @@
+"""Central paths and project-wide constants.
+
+Everything that touches disk should import its paths from here, so that moving
+the data directory is a one-line change.
+"""
+
+from pathlib import Path
+
+# marketgraph/config.py -> marketgraph/ -> project root
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+DATA_DIR = PROJECT_ROOT / "data"
+RAW_DIR = DATA_DIR / "raw"
+PROCESSED_DIR = DATA_DIR / "processed"
+ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
+
+PRICES_PATH = RAW_DIR / "prices.parquet"
+
+# Start of the historical window we pull. 2010 gives us ~15 years spanning the
+# post-GFC recovery, the 2015-16 and 2018 drawdowns, the COVID crash, the 2022
+# bear market, and the 2023+ rally -- i.e. several distinct correlation regimes,
+# which is what a walk-forward evaluation needs to be meaningful.
+DEFAULT_START = "2010-01-01"
+
+
+def ensure_dirs() -> None:
+    """Create the data/artifact directories if they do not already exist."""
+    for d in (RAW_DIR, PROCESSED_DIR, ARTIFACTS_DIR):
+        d.mkdir(parents=True, exist_ok=True)

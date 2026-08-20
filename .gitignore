@@ -1,0 +1,25 @@
+# Downloaded data is reproducible from scripts/fetch_data.py -- keep it out of git.
+# prices.parquet alone is ~19 MB and would be rewritten on every refresh.
+# Leading slash matters: a bare "data/" would also ignore the marketgraph/data
+# source package.
+/data/
+/artifacts/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Editors
+*~
+\#*\#
+.\#*
+.vscode/
+.idea/
