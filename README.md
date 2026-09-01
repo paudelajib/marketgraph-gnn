@@ -101,6 +101,42 @@ not modelled at all.
 
 ---
 
+### Crisis robustness — where the strategy is actually interesting
+
+Annualised return over a decade hides the property a dollar-neutral book is supposed to
+have. Run at zero cost, so the question is whether the *signal* holds across regimes
+rather than whether it is tradable.
+
+![Crisis analysis](docs/crisis_analysis.png)
+
+**It is genuinely market-neutral.** Beta to SPY is −0.03, weekly correlation −0.02.
+That is not automatic — the non-graph control `mlp_no_graph` leaked a beta of +0.11.
+
+**It makes money in the market's worst weeks.** In SPY's worst decile of weeks, SPY
+annualises to −211% while `reversal_1d` returns **+37.8%** and `gcn_sector` **+21.1%**.
+
+**But only in sharp crashes, not slow bear markets.** Peak-to-trough over the five SPY
+drawdowns deeper than 10%, detected from the data rather than hardcoded:
+
+| Drawdown | SPY | reversal_1d | gcn_sector |
+|---|---|---|---|
+| Feb 2018 (−9%) | −9.1% | **+5.0%** | +3.0% |
+| Q4 2018 (−19%) | −18.7% | **+14.8%** | −4.8% |
+| COVID (−33%) | −33.4% | −13.2% | −6.8% |
+| Feb–Apr 2025 (−19%) | −18.6% | **+7.4%** | +2.6% |
+| **2022 bear (−24%)** | −24.1% | **−23.9%** | **−31.9%** |
+
+The 2022 failure is explicable rather than random. Reversal profits from panic: sharp
+crashes are overreactions that snap back. 2022 was a ten-month repricing for rising
+rates in which declines *trended*, so the strategy kept betting on bounces that never
+came. **Survives crashes, not bear markets.**
+
+**This partially rehabilitates the graph.** `gcn_sector` beat its own control on
+market-neutrality (−0.04 vs +0.11 beta) and in stress weeks (+21.1% vs −10.0%). The
+graph did not improve average rank IC, but it produced a better-behaved portfolio — a
+result the headline IC table hides, and the strongest case in this repo for message
+passing being worth anything.
+
 ## The question, precisely
 
 For each stock *i* on each day *t*, predict whether its next-day return beats the
