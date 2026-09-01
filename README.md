@@ -20,8 +20,9 @@ model reached **0.0047** (t = 1.13), statistically indistinguishable from zero. 
 own non-graph control, an MLP with identical capacity and training, reached 0.0028;
 the ~0.002 gap between them is well inside noise.
 
-Net of 5 bps transaction costs, **every model loses money**. The best strategy would
-need execution costs below **1.3 bps** to break even, against daily turnover of 200–350%.
+The edge is also too small to trade. **At zero transaction cost** the best long-short
+Sharpe is **0.46** — less than a passive index, for far more risk. Realistic costs for
+this universe (~1 bp) cut that to **0.10**; at 2 bps it turns negative.
 
 This is a negative result, reported as one. The value of the project is the
 methodology: the leakage controls, the ablation design, and a cost model honest enough
@@ -71,8 +72,32 @@ Long the top decile, short the bottom, equal-weighted, dollar-neutral.
 ![Equity curves](docs/equity_curves.png)
 
 The two panels share a y-axis, and the collapse between them **is** the finding. The
-break-even column is the most useful number in the project: it states the execution
-quality each signal would require, independently of the 5 bps I assumed.
+break-even column states the execution quality each signal would need, independently of
+the cost assumed.
+
+### How much does that depend on the cost assumption?
+
+The 5 bps headline is deliberately conservative. Measuring the floor instead: a
+one-cent spread is the minimum tick, and you cross about half of it, which across this
+universe is a **median of 0.23 bps** and a **mean of 0.39 bps**. The same penny costs
+very different amounts depending on share price — 0.23 bps on a $215 stock, but
+**3.56 bps on Ford at $14**.
+
+Net Sharpe across the range (`scripts/cost_sensitivity.py`):
+
+| Model | 0 bps | 0.5 bps | 1 bps | 2 bps | 5 bps | Break-even |
+|---|---|---|---|---|---|---|
+| reversal_1d | 0.46 | 0.28 | 0.10 | −0.27 | −1.36 | 1.27 bps |
+| gcn_sector | 0.33 | 0.19 | 0.05 | −0.24 | −1.10 | 1.16 bps |
+| logistic | 0.27 | 0.12 | −0.03 | −0.34 | −1.26 | 0.89 bps |
+| gbdt | −0.08 | −0.25 | −0.43 | −0.78 | −1.82 | −0.23 bps |
+
+**This matters less than it looks.** The strategy is not viable at 5 bps *or* at 1 bp,
+because the gross Sharpe of 0.46 was never good enough to survive any friction. Costs
+are the proximate cause of failure; the weak signal is the real one. Even 1 bp stays
+optimistic — the one-cent tick is a floor, spreads widen in stress and around the open
+and close (exactly when a daily strategy trades), and borrow fees and market impact are
+not modelled at all.
 
 ---
 
@@ -187,8 +212,11 @@ Stated plainly, because they bound what the result means:
   most likely reason the neural models underperform gradient boosting.
 - **One horizon, one label.** Only next-day, median-split. Nothing here tests whether
   graphs help at weekly or monthly horizons.
-- **Costs are a model, not a fill.** 5 bps of spread and commission, ignoring market
-  impact and short borrow fees. It is optimistic.
+- **Costs are a model, not a fill.** Reported across 0–10 bps rather than at one
+  assumed level, because the right number is genuinely uncertain: commission is now
+  zero, the measured half-spread floor is ~0.4 bps, but that floor ignores spread
+  widening in stress, retail fills being worse than the midpoint under payment for
+  order flow, short borrow fees, and market impact.
 
 ## What I would do next
 
