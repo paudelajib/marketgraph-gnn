@@ -1,0 +1,5 @@
+model,corr_with_spy,beta_to_spy,all_weeks_ann_pct,worst_decile_weeks_ann_pct,best_week_pct,worst_week_pct
+reversal_1d,-0.02,-0.03,10.89,37.77,18.85,-16.44
+gcn_sector,-0.03,-0.04,7.07,21.12,13.09,-12.49
+mlp_no_graph,0.1,0.11,-4.2,-9.95,14.78,-15.71
+SPY (benchmark),1.0,1.0,16.04,-211.46,12.09,-14.55

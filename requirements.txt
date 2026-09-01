@@ -1,0 +1,13 @@
+# Pinned to the versions this project was developed and validated against.
+# Note the absence of torch-geometric: with 115 nodes the adjacency is a dense
+# 115x115 matrix, so the GNN layers are plain matmuls written by hand in gnn.py.
+
+pandas>=2.0
+numpy>=1.24
+pyarrow>=14.0
+yfinance>=0.2.60
+scikit-learn>=1.2
+scipy>=1.10
+torch>=2.0
+matplotlib>=3.7
+pytest>=7.0
